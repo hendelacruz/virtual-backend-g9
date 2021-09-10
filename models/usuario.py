@@ -1,11 +1,10 @@
-from sqlalchemy.sql.expression import false
 from config.conexion_bd import base_de_datos
-from sqlalchemy import Column, types
+from sqlalchemy import Column, orm, types
 
 class UsuarioModel(base_de_datos.Model):
   __tablename__ = 'usuarios'
 
-  usuarioId = Column(name='id', type_=type.Integer, primary_key=True, nullable=False, autoincrement=True)
+  usuarioId = Column(name='id', type_=types.Integer, primary_key=True, nullable=False, autoincrement=True)
 
   usuarioNombre = Column(name='nombre', type_=types.String(30), nullable=False)
 
@@ -15,4 +14,6 @@ class UsuarioModel(base_de_datos.Model):
 
   usuarioPassword = Column(name='password', type_=types.TEXT, nullable=False)
 
-  usuarioPhone = Column(name='Telefono', type_=types.String(15), nullable=True)
+  usuarioTelefono = Column(name='Telefono', type_=types.String(15), nullable=True)
+
+  tareas = orm.relationship('TareaModel', backref='tareaUsuario')

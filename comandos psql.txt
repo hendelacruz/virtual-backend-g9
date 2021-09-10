@@ -1,3 +1,7 @@
 \l => lista todas las bases de datos en mi servidor
 \c nombre_bd => conectarse o usar una determinada base de datos 
 \d => lista todas las tablas de esa base de datos
+\dt \dt public. => listado de tablas (el public es un esquema) sin sus secuencializadores
+\d nombre_tabla => descripcion la configuracion/informacion de la tabla con todas sus columnas y propiedades
+
+
