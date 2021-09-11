@@ -30,7 +30,7 @@ def autenticador(username, password):
 def identificador(payload):
     '''Sirve para que una vez el usuario envie la token y quiera realizar una peticion a una ruta protegida esta funcion sera encargada de identificar a dicho usuario y devolver su informacion'''
     print(payload)
-    usuarioId = payload.get('identity')
+    usuarioId = payload.get('usuario').get('id')
     usuarioEncontrado = base_de_datos.session.query(
         UsuarioModel).filter(UsuarioModel.usuarioId == usuarioId).first()
     if usuarioEncontrado:
