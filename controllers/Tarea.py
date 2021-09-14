@@ -86,6 +86,7 @@ class TareaController(Resource):
           tareaDic['tareaEstado'] = tareaDic['tareaEstado'].value
           print(tareaDic)
           resultado.append(tareaDic)
+        # devolver todas las tareas correspondiente al usuario del current_identity
         return {
             "message": None,
             "content": resultado

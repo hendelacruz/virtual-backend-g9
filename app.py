@@ -4,7 +4,8 @@ from config.conexion_bd import base_de_datos
 from models.Tarea import TareaModel
 from controllers.Tarea import TareaController
 from controllers.Usuario import (RegistroController,
-                                 UsuarioController)
+                                 UsuarioController,
+                                 ResetearPasswordController)
 from flask_jwt import JWT
 from config.seguridad import autenticador, identificador
 from dotenv import load_dotenv
@@ -74,6 +75,7 @@ api.add_resource(RegistroController, '/registro')
 # api.add_resource(LoginController, '/login')
 api.add_resource(UsuarioController, '/usuario')
 api.add_resource(TareaController, '/tareas')
+api.add_resource(ResetearPasswordController, '/reset-password')
 
 if __name__ == '__main__':
     app.run(debug=True)

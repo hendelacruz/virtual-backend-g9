@@ -3,5 +3,5 @@
 \d => lista todas las tablas de esa base de datos
 \dt \dt public. => listado de tablas (el public es un esquema) sin sus secuencializadores
 \d nombre_tabla => descripcion la configuracion/informacion de la tabla con todas sus columnas y propiedades
-
+\x => cambia la vista de los resultados de forma horizontal a vertical y viceversa
 
