@@ -3,7 +3,7 @@ from models.Tarea import TareaModel
 from flask_restful import Resource, reqparse
 from flask_jwt import current_identity, jwt_required
 
-class TareaController(Resource):
+class TareasController(Resource):
   serializador = reqparse.RequestParser(bundle_errors=True)
   serializador.add_argument(
       'titulo',
