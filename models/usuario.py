@@ -14,6 +14,6 @@ class UsuarioModel(base_de_datos.Model):
 
   usuarioPassword = Column(name='password', type_=types.TEXT, nullable=False)
 
-  usuarioTelefono = Column(name='Telefono', type_=types.String(15), nullable=True)
+  usuarioTelefono = Column(name='telefono', type_=types.String(15), nullable=True)
 
   tareas = orm.relationship('TareaModel', backref='tareaUsuario')

@@ -1,4 +1,4 @@
-from flask import Flask, current_app, render_template, request
+from flask import Flask, current_app, render_template, request, send_file
 from flask_restful import Api
 from config.conexion_bd import base_de_datos
 from controllers.Tarea import TareasController
@@ -10,13 +10,14 @@ from flask_jwt import JWT
 from config.seguridad import Usuario, autenticador, identificador
 from dotenv import load_dotenv
 from datetime import timedelta, datetime
-from os import environ
+from os import environ, path
 from config.configuracion_jwt import manejo_error_JWT
 from cryptography.fernet import Fernet
 from json import loads
 from bcrypt import gensalt, hashpw
 from utils.patrones import PATRON_PASSWORD
 from re import search
+from uuid import uuid4
 
 load_dotenv()
 
@@ -44,6 +45,7 @@ jsonwebtoken = JWT(app=app, authentication_handler=autenticador,
 jsonwebtoken.jwt_error_callback = manejo_error_JWT
 
 base_de_datos.init_app(app)
+#base_de_datos.drop_all(app=app)
 base_de_datos.create_all(app=app)
 
 
@@ -160,13 +162,45 @@ def cambiar_password():
             return {
                 "message": "Se cambio la contraseña exitosamente"
             }
-            
+
         except Exception as e:
             print(e)
             return {
                 "message": "Hubo un error al actualizar el usuario"
             }
 
+@app.route('/subir-archivo-servidor', methods=['POST'])
+def subir_archivo_servidor():
+    archivo = request.files.get('imagen')
+    if archivo is None:
+        return {
+            "message": "Archivo no encontrado"
+        }, 404
+    # filename => retornara el nombre del archivo
+    print(archivo.filename)
+    # mimetype => retornara el formato (tipo) del archivo
+    print(archivo.mimetype)
+    # sacar el nombre del archivo
+    nombre_inicial = archivo.filename
+    # sacado su extension
+    extension = nombre_inicial.rsplit(".")[-1]
+    # genero un nuevo nombre del archivo
+    nuevo_nombre = str(uuid4())+'.'+extension
+    # uso ese nombre para guardar el archivo
+    archivo.save(path.join('media', nuevo_nombre))
+    return {
+        "message": "archivo subido exitosamente",
+        "content": {
+            "nombre": nuevo_nombre
+        }
+    }, 201
+
+@app.route("/multimedia/<string:nombre>", methods=['GET'])
+def devolver_imagen_servidor(nombre):
+    try:
+        return send_file(path.join('media', nombre))
+    except:
+        return send_file(path.join('media', 'not_found.png'))
 
 # RUTAS
 api.add_resource(RegistroController, '/registro')
