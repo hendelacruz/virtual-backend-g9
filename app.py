@@ -10,7 +10,7 @@ from flask_jwt import JWT
 from config.seguridad import Usuario, autenticador, identificador
 from dotenv import load_dotenv
 from datetime import timedelta, datetime
-from os import environ, path
+from os import environ, path, remove
 from config.configuracion_jwt import manejo_error_JWT
 from cryptography.fernet import Fernet
 from json import loads
@@ -202,6 +202,16 @@ def devolver_imagen_servidor(nombre):
     except:
         return send_file(path.join('media', 'not_found.png'))
 
+@app.route("/eliminar-archivo-servidor/<string:nombre>", methods=['DELETE'])
+def eliminar_imagen_servidor(nombre):
+    try:
+        remove(path.join('media', nombre))
+    # funciona si el try fue exitoso o si no lo fue, osea siempre se va a ejecutar   
+    finally:
+        return {
+            "message": 'ok'
+        }, 204
+    
 # RUTAS
 api.add_resource(RegistroController, '/registro')
 # api.add_resource(LoginController, '/login')
