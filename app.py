@@ -5,15 +5,15 @@ from controllers.Tarea import TareasController
 from controllers.Usuario import (RegistroController,
                                  UsuarioController,
                                  ResetearPasswordController)
-from models.Usuario import UsuarioModel
 from flask_jwt import JWT
-from config.seguridad import Usuario, autenticador, identificador
+from config.seguridad import autenticador, identificador
 from dotenv import load_dotenv
 from datetime import timedelta, datetime
 from os import environ, path, remove
 from config.configuracion_jwt import manejo_error_JWT
 from cryptography.fernet import Fernet
 from json import loads
+from models.Usuario import UsuarioModel
 from bcrypt import gensalt, hashpw
 from utils.patrones import PATRON_PASSWORD
 from re import search
@@ -53,7 +53,8 @@ jsonwebtoken = JWT(app=app, authentication_handler=autenticador,
 jsonwebtoken.jwt_error_callback = manejo_error_JWT
 
 base_de_datos.init_app(app)
-#base_de_datos.drop_all(app=app)
+
+# base_de_datos.drop_all(app=app)
 base_de_datos.create_all(app=app)
 
 
@@ -139,29 +140,31 @@ def cambiar_password():
         except Exception as e:
             print(e)
             return render_template('bad_token.jinja')
-
     elif request.method == 'POST':
         print(request.get_json())
-        # buscarria al usuario segun su contraseña
+        # buscaria al usuario segun su correo
         email = request.get_json().get('email')
         password = request.get_json().get('password')
+
         usuario = base_de_datos.session.query(UsuarioModel).filter(
             UsuarioModel.usuarioCorreo == email).first()
+
         if usuario is None:
             return {
-                "message": "Usuario no encontrado"
+                "message": "Usuario no existe"
             }, 400
+
         # validamos el formato de la contraseña
         if search(PATRON_PASSWORD, password) is None:
             return {
-                "message":"Contraseña muy debil, debe tener al menos 1 mayus, 1 numero, 1 carac. especial y no menos de 6 caracteres"
+                "message": "Contraseña muy debil, debe tener al menos 1 mayus, 1 minus, 1 numero, 1 carac. especial y no menos de 6 caracteres"
             }, 400
 
         # encripto la nueva contraseña
         password_bytes = bytes(password, 'utf-8')
         nuevaPwd = hashpw(password_bytes, gensalt()).decode('utf-8')
 
-            # llamo al model para hacer el update
+        # llamo al model para hacer el update
         try:
             base_de_datos.session.query(UsuarioModel).filter(
                 UsuarioModel.usuarioId == usuario.usuarioId).update({'usuarioPassword': nuevaPwd})
@@ -175,7 +178,8 @@ def cambiar_password():
             print(e)
             return {
                 "message": "Hubo un error al actualizar el usuario"
-            }
+            }, 400
+
 
 @app.route('/subir-archivo-servidor', methods=['POST'])
 def subir_archivo_servidor():
@@ -203,6 +207,7 @@ def subir_archivo_servidor():
         }
     }, 201
 
+
 @app.route("/multimedia/<string:nombre>", methods=['GET'])
 def devolver_imagen_servidor(nombre):
     try:
@@ -210,15 +215,17 @@ def devolver_imagen_servidor(nombre):
     except:
         return send_file(path.join('media', 'not_found.png'))
 
+
 @app.route("/eliminar-archivo-servidor/<string:nombre>", methods=['DELETE'])
 def eliminar_imagen_servidor(nombre):
     try:
         remove(path.join('media', nombre))
-    # funciona si el try fue exitoso o si no lo fue, osea siempre se va a ejecutar   
     finally:
+        # funciona si el try fue exitoso o si no lo fue, osea, siempre se va a ejecutar
         return {
             "message": 'ok'
         }, 204
+
 
 @app.route('/subir-imagen-cloudinary', methods=['POST'])
 def subir_imagen_cd():
@@ -229,6 +236,7 @@ def subir_imagen_cd():
         "message": "Archivo subido exitosamente",
         "content": resultado
     }
+
 
 @app.route('/eliminar-imagen-cloudinary/<string:id>', methods=['DELETE'])
 def eliminar_imagen_cd(id):
