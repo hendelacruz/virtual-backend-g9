@@ -2,9 +2,9 @@ from flask import Flask, current_app, render_template, request, send_file
 from flask_restful import Api
 from config.conexion_bd import base_de_datos
 from controllers.Tarea import TareasController
-from controllers.Usuario import RegistroController
-from controllers.Usuario import UsuarioController
-from controllers.Usuario import ResetearPasswordController
+from controllers.Usuario import (RegistroController,
+                                 UsuarioController,
+                                 ResetearPasswordController)
 from flask_jwt import JWT
 from config.seguridad import autenticador, identificador
 from dotenv import load_dotenv
@@ -231,10 +231,10 @@ def eliminar_imagen_servidor(nombre):
 def subir_imagen_cd():
     imagen = request.files.get('imagen')
     print(imagen)
-    resultado = upload(imagen, resource_type="video")
+    resultado = upload(imagen, resource_type="image")
     return {
         "message": "Archivo subido exitosamente",
-        "content": resultado
+        "content": resultado.get('public_id')
     }
 
 
