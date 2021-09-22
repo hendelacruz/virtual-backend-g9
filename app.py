@@ -2,9 +2,9 @@ from flask import Flask, current_app, render_template, request, send_file
 from flask_restful import Api
 from config.conexion_bd import base_de_datos
 from controllers.Tarea import TareasController
-from controllers.Usuario import (RegistroController,
-                                 UsuarioController,
-                                 ResetearPasswordController)
+from controllers.Usuario import RegistroController
+from controllers.Usuario import UsuarioController
+from controllers.Usuario import ResetearPasswordController
 from flask_jwt import JWT
 from config.seguridad import autenticador, identificador
 from dotenv import load_dotenv
