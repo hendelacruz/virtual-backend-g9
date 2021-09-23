@@ -2,6 +2,7 @@ from config.conexion_bd import base_de_datos
 from sqlalchemy import Column, orm, types
 
 
+
 class UsuarioModel(base_de_datos.Model):
     __tablename__ = 'usuarios'
 
