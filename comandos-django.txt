@@ -9,3 +9,5 @@ python manage.py runserver => levanta el proyecto de django
 python manage.py showmigrations => muestra todas las migraciones y las que no se ejecutaron en la bd no estaran seleccionadas
 
 python manage.py migrate <nombre_app> => ejecutara todas las migraciones pendientes en la bd
+
+python manage.py makemigrations <nombre_app> --name <nombre_migracion> => creara una nueva migracion en relacion al contenido actual de nuestros modelos
