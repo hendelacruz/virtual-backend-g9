@@ -40,6 +40,13 @@ class TareasController(Resource):
       help='Falta el estado'    
   )
 
+  serializador.add_argument(
+        'imagen',
+        type=str,
+        required=False,
+        location='json'
+  )
+
   @jwt_required()
   def post(self):
     try:
@@ -49,6 +56,7 @@ class TareasController(Resource):
         nuevaTarea.tareaEstado = data.get('estado')
         nuevaTarea.tareaTags = data.get('tags')
         nuevaTarea.tareaTitulo = data.get('titulo')
+        nuevaTarea.tareaImagen = data.get('imagen')
         nuevaTarea.usuario = current_identity.get('usuarioId')
 
         base_de_datos.session.add(nuevaTarea)
