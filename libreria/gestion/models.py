@@ -26,6 +26,10 @@ class ProductoModel(models.Model):
     productoUnidadMedida = models.TextField(
         choices=OpcionesUM.choices, default=OpcionesUM.UNIDAD, db_column='unidad_medida')
 
+    def __str__(self):
+        
+        return self.productoNombre
+
     
     class Meta:
         """Link de la documentacion https://docs.djangoproject.com/en/3.2/ref/models/options/"""
@@ -39,18 +43,22 @@ class ProductoModel(models.Model):
         verbose_name_plural = 'productos'
 
 class ClienteModel(models.Model):
-
+    # NOTA: si vamos a usar el panel administrativo de Django entonces solo ahi se debe usar el verbose_name y el help_text
     clienteId = models.AutoField(
         primary_key=True, null=False, unique=True, db_column='id')
 
     clienteNombre = models.CharField(
-        max_length=45, db_column='nombre')
+        max_length=45, db_column='nombre', verbose_name='nombre', help_text='Ingresa aqui el nombre')
 
     clienetDocumento = models.CharField(
-        max_length=12, db_column='documento', unique=True)
+        max_length=12, db_column='documento', unique=True, verbose_name='documento del cliente')
 
     clienteDireccion = models.CharField(
-        max_length=100, db_column='direccion')
+        max_length=100, db_column='direccion', verbose_name='direccion')
+
+    def __str__(self):
+        # Metodo que permite sobreescribir la forma en la cual se mostrara el objeto por consola al ser consultado en su totalidad
+        return self.clienteNombre
     
     class Meta:
         db_table = 'clientes'
@@ -106,7 +114,7 @@ class DetalleModel(models.Model):
 
     cabeceras = models.ForeignKey(to=CabeceraModel, db_column='cabecera_operaciones_id',
                                   on_delete=models.PROTECT, related_name='cabeceraDetalles', null=False)
-                                  
+
 
     class Meta:
         db_table = 'detalle_operaciones'
