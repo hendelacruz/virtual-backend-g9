@@ -52,7 +52,7 @@ class ClienteModel(models.Model):
     clienteNombre = models.CharField(
         max_length=45, db_column='nombre', verbose_name='nombre', help_text='Ingresa aqui el nombre')
 
-    clienetDocumento = models.CharField(
+    clienteDocumento = models.CharField(
         max_length=12, db_column='documento', unique=True, verbose_name='documento del cliente')
 
     clienteDireccion = models.CharField(

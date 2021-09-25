@@ -28,7 +28,7 @@ class ProductosTestCase(APITestCase):
 
     def test_post_success(self):
         '''Deberia retornar el producto creado'''
-
+        # aqui enviamos un body
         request = self.client.post('/gestion/productos/', data={
             "productoNombre": "Cartulina Canson Blanca",
             "productoPrecio": 1.50,
