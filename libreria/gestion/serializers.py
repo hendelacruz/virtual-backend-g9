@@ -17,3 +17,7 @@ class ProductoSerializer(serializers.ModelSerializer):
 
         # no se puede utilizar los dos atributos al mismo tiempo, es decir, o usamos el exclude o usamos el fields
 
+class ClienteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClienteModel
+        fields = '__all__'
