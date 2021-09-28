@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ProductoModel, ClienteModel
+from .models import DetalleModel, ProductoModel, ClienteModel, CabeceraModel
 
 
 class ProductoSerializer(serializers.ModelSerializer):
@@ -17,13 +17,54 @@ class ProductoSerializer(serializers.ModelSerializer):
 
         # no se puede utilizar los dos atributos al mismo tiempo, es decir, o usamos el exclude o usamos el fields
 
+
 class ClienteSerializer(serializers.ModelSerializer):
     # https://www.django-rest-framework.org/api-guide/fields/
     clienteNombre = serializers.CharField(
-        max_length=45, required=False, allow_null=False, trim_whitespace=True, read_only=True)
+        max_length=45, required=False, trim_whitespace=True, read_only=True)
     clienteDireccion = serializers.CharField(
         max_length=100, required=False, trim_whitespace=True)
 
     class Meta:
         model = ClienteModel
         fields = '__all__'
+
+
+class DetalleOperacionSerializer(serializers.Serializer):
+    cantidad = serializers.IntegerField(required=True, min_value=1)
+
+    importe = serializers.DecimalField(
+        max_digits=5, decimal_places=2, min_value=0.01, required=True)
+
+    producto = serializers.IntegerField(required=True, min_value=1)
+
+
+class OperacionSerializer(serializers.Serializer):
+    tipo = serializers.ChoiceField(
+        choices=[('V', 'VENTA'), ('C', 'COMPRA')], required=True)
+
+    cliente = serializers.CharField(required=True, min_length=8, max_length=11)
+
+    detalle = DetalleOperacionSerializer(many=True)
+
+    # detalle2= serializers.ListField(child=DetalleOperacionSerializer)
+
+
+class DetalleOperacionModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DetalleModel
+        # fields = '__all__'
+        exclude = ['cabeceras']
+        depth = 1
+
+
+class OperacionModelSerializer(serializers.ModelSerializer):
+    cabeceraDetalles = DetalleOperacionModelSerializer(
+        # source='cabeceraDetalles',
+        many=True)
+
+    class Meta:
+        model = CabeceraModel
+        fields = '__all__'
+        # con el atributo depth indicare cuantos niveles quiero agregar para mostrar la informacion en el caso de las FK's
+        depth = 1
